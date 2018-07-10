@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bw.dao.animaldao" >
+  <!-- 总条数 -->
+  <select id="count" resultType="Integer" >
+  	select count(*) from t_animal 
+  </select>
+   <!-- 查询列表 -->
+  <select id="list" resultType="com.bw.bean.Animal" >
+  select a.* ,group_concat(r.rname) rnames from t_animal a left join t_a_r t on a.aid=t.aid left join 
+  t_range r on t.rid=r.rid  group by a.aid limit #{startIndex},#{pageSize}
+  </select>
+   <!-- 详情信息 -->
+  <select id="look" resultType="com.bw.bean.Animal" >
+  	 select a.* ,group_concat(r.rname) rnames from t_animal a left join t_a_r t on a.aid=t.aid left join 
+  t_range r on t.rid=r.rid  group by a.aid having aid=#{aid}
+  </select>
+  <!--checkbox  -->  
+  <select id="rlist" resultType="com.bw.bean.Animal">
+   select * from t_range
+  </select>
+  <!-- 添加动物 -->  
+  <insert id="insert">
+   insert into t_animal(aname,weight) values(#{aname},#{weight})
+  </insert>
+   <!--添加中间表  -->
+   <insert id="add">
+   insert into t_a_r(aid,rid) values(#{aid},#{rid})
+  </insert>
+   <!--删除动物  -->
+   <delete id="plsc">
+  	delete from t_animal where aid in(${ids}) 
+  </delete>
+   <!--删除中间表  -->
+   <delete id="del">
+  	delete from t_a_r where aid in(${ids}) 
+  </delete>
+</mapper>
